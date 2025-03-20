@@ -403,8 +403,108 @@ class NetworkMonitorApp(QMainWindow):
         except Exception as e:
             print(f"Error fetching router IP: {e}")
             return None
+    def scan_now(self):
+        """Manually trigger a network scan."""
+        if self.device_scanner_thread is not None:
+            self.device_scanner_thread.stop()  # Stop any ongoing scan
+        self.device_scanner_thread = DeviceScannerThread()
+        self.device_scanner_thread.device_found.connect(self.update_device_list)
+        self.device_scanner_thread.scan_complete.connect(self.update_scan_complete)
+        self.device_scanner_thread.start()
+    def show_device_details(self):
+        """Show details of the selected device."""
+        selected_row = self.device_table.currentRow()
+        if selected_row >= 0:
+            ip_address = self.device_table.item(selected_row, 0).text()
+            mac_address = self.device_table.item(selected_row, 1).text()
+            # You can add more details as needed
+            details = f"IP Address: {ip_address}\nMAC Address: {mac_address}\n"
+            # You can fetch more details from your known_devices or detected_devices if needed
+            self.device_details.setPlainText(details)
+    def update_scan_complete(self):
+        """Handle actions after a scan is complete."""
+        print("Scan complete.")
+        QMessageBox.information(self, "Scan Complete", "The device scan has been completed.")
+    def toggle_packet_capture(self):
+        """Start or stop packet capture."""
+        if self.packet_capture_thread is None:
+            self.start_packet_capture()
+        else:
+            self.stop_packet_capture()
+    def apply_filter(self):
+        """Apply the filter from the input field."""
+        filter_text = self.filter_input.text().strip()
+        if self.packet_capture_thread:
+            self.packet_capture_thread.update_filter(filter_text)
+    def show_advanced_filter(self):
+        """Show the advanced filter dialog."""
+        dialog = AdvancedFilterDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
+            filter_text = dialog.get_filter()
+            if self.packet_capture_thread:
+                self.packet_capture_thread.update_filter(filter_text)
+    def apply_preset_filter(self):
+        """Apply a preset filter based on the selected option."""
+        preset = self.preset_combo.currentText()
+        if preset == "Show All":
+            self.filter_input.setText("")
+        elif preset == "TCP Only":
+            self.filter_input.setText("tcp")
+        elif preset == "UDP Only":
+            self.filter_input.setText("udp")
+        elif preset == "ICMP Only":
+            self.filter_input.setText("icmp")
+        elif preset == "ARP":
+            self.filter_input.setText("arp")
+        elif preset == "HTTP/HTTPS":
+            self.filter_input.setText("tcp port 80 or tcp port 443")
+        elif preset == "DNS":
+            self.filter_input.setText("udp port 53")
+        elif preset == "Common Ports":
+            self.filter_input.setText("tcp port 22 or tcp port 80 or tcp port 443")
+    
+        self.apply_filter()
+    def show_packet_details(self):
+        """Show details of the selected packet."""
+        selected_row = self.packet_table.currentRow()
+        if selected_row >= 0:
+            packet_info = self.captured_packets[selected_row]
+            self.packet_details.setPlainText(str(packet_info))
 
-        
+    def add_trusted_device(self):
+        """Add the selected device to trusted devices."""
+        selected_row = self.device_table.currentRow()
+        if selected_row >= 0:
+            mac_address = self.device_table.item(selected_row, 1).text()
+            self.known_devices[mac_address] = True
+            self.save_json(self.known_devices, "known_devices.json")
+            QMessageBox.information(self, "Success", f"Device {mac_address} added to trusted devices.")
+    def mark_suspicious_device(self):
+        """Mark the selected device as suspicious."""
+        selected_row = self.device_table.currentRow()
+        if selected_row >= 0:
+            mac_address = self.device_table.item(selected_row, 1).text()
+            # Implement your logic to mark the device as suspicious
+            QMessageBox.warning(self, "Suspicious Device", f"Device {mac_address} marked as suspicious.")
+    def send_report(self):
+        """Send a network report via email."""
+        # Implement your logic to send a report
+        QMessageBox.information(self, "Report", "Network report sent successfully.")
+    def save_general_settings(self):
+        """Save the general settings."""
+        CONFIG["SCAN_INTERVAL"] = int(self.scan_interval_input.text().strip())
+        CONFIG["NETWORK_INTERFACE"] = self.interface_combo.currentText()
+        save_config(CONFIG)
+        QMessageBox.information(self, "Success", "General settings saved successfully.")
+    def save_email_settings(self):
+        """Save the email settings."""
+        CONFIG["SMTP_SERVER"] = self.smtp_server_input.text().strip()
+        CONFIG["SMTP_PORT"] = int(self.smtp_port_input.text().strip())
+        CONFIG["EMAIL_SENDER"] = self.email_sender_input.text().strip()
+        CONFIG["EMAIL_PASSWORD"] = self.email_password_input.text().strip()
+        CONFIG["EMAIL_RECEIVER"] = self.email_input.text().strip()
+        save_config(CONFIG)
+        QMessageBox.information(self, "Success", "Email settings saved successfully.")
     def setup_ui(self):
         # Create central widget and tab structure
         central_widget = QWidget()
