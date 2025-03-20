@@ -1,66 +1,92 @@
-# ARP-Based Network Monitoring Tool 🚀🔍  
+# 🛡️ ARP Defender - Advanced Network Security Tool
 
-## Overview  
-The **ARP-Based Network Monitoring Tool** is a lightweight yet powerful solution designed to enhance network security by detecting unauthorized devices and tracking network intrusions in real-time. This tool enables network administrators to monitor active connections, identify unknown devices, and receive automated alerts to mitigate potential threats.  
+![ARP Defender Logo](GUI_Assets/logo.png)
 
-## 🔑 Key Features  
-- **Real-time ARP Scanning:** Continuously detects all connected devices within the network.  
-- **Intrusion Detection:** Identifies unauthorized devices attempting to connect.  
-- **Automated Email Notifications:** Sends instant alerts when an unknown device is detected.  
-- **Device Tracking:** Monitors and logs how long a device remains connected.  
-- **Historical Logging System:** Maintains a detailed log of all detected devices for future analysis.  
-- **Lightweight and Efficient:** Uses ARP scanning instead of deep packet inspection, ensuring minimal resource usage.  
+🚀 **ARP Defender** is a **cutting-edge real-time ARP monitoring and security tool** designed to **detect, analyze, and neutralize** potential ARP-based network threats. With a sleek **graphical user interface (GUI) built using Tkinter**, it provides seamless network visibility, **real-time security alerts**, and **detailed analytical reports** to protect your network from malicious activities.
 
-## ⚙️ How It Works  
-1. **Sends ARP Requests:** The tool periodically sends ARP requests to identify active devices within the network.  
-2. **Maintains a Device List:** Stores known devices to differentiate between authorized and unauthorized connections.  
-3. **Continuous Monitoring:** Runs in a loop to constantly scan for new device connections.  
-4. **Triggers Alerts:** Immediately sends an email notification if an unknown device is detected.  
-5. **Sends ‘Safe’ Status Updates:** If no new devices are detected, the tool sends a status email every 10 seconds.  
+🌐 **Why Choose ARP Defender?**
+- 🛠 **Automated ARP Monitoring** - Continuously scans the network for ARP activity every 5 seconds.
+- 🔍 **Advanced Filtering Options** - IP-based, MAC-based, security, and performance filters.
+- ⚠️ **Real-time Security Alerts** - Detects and flags suspicious or unauthorized ARP activity.
+- 📊 **Graphical Network Traffic Analysis** - Visual insights into live network activity.
+- 📜 **Detailed Logging & Reporting** - Generates **tabular device reports** and **PDF summaries** for forensic analysis.
+- 📡 **Bandwidth Tracking per IP** - Identifies abnormal data usage patterns.
+- 📂 **Exportable Reports** - Save monitoring results for future security audits.
 
-## 🛠️ Installation Guide  
-### **Step 1: Clone the Repository**  
-```bash  
-git clone https://github.com/your-username/ARP-Network-Monitoring-Tool.git  
-cd ARP-Network-Monitoring-Tool  
-```
+---
 
-### **Step 2: Install Required Dependencies**  
-Ensure you have Python installed, then install the necessary libraries:  
-```bash  
-pip install scapy smtplib schedule  
-```
+## 🚀 Key Features
+- ✅ **Real-time ARP Monitoring** (automatic scanning every 5 seconds)
+- ✅ **User-friendly GUI** with easy **Start/Stop Monitoring** controls
+- ✅ **Security Alerts for ARP Spoofing, MITM Attacks, and IP Conflicts**
+- ✅ **Dynamic Filtering** for monitoring specific devices or networks
+- ✅ **Live Network Visualization** for ARP request/response patterns
+- ✅ **Bandwidth Consumption Tracking** to detect unauthorized activities
+- ✅ **Tabular Report Generation** for filtering and exporting analysis data
+- ✅ **Auto-Generated PDF Reports** for compliance and threat assessment
 
-### **Step 3: Configure Email Alerts**  
-Edit the script to include your email credentials for sending notifications. Update the following lines in `config.py`:  
-```python  
-EMAIL_SENDER = "your-email@example.com"  
-EMAIL_PASSWORD = "your-password"  
-EMAIL_RECEIVER = "admin@example.com"  
-```
+---
 
-### **Step 4: Run the Monitoring Tool**  
-```bash  
-python monitor.py  
-```
+## 🔍 Supported Filters
+ARP Defender includes advanced filtering options for precise monitoring and security analysis:
+- 🔹 **IP-based Filtering** - Monitor specific IP addresses for ARP activity.
+- 🔹 **MAC-based Filtering** - Track activity based on MAC addresses.
+- 🔹 **ARP Type Filtering** - Separate ARP Requests and Responses.
+- 🔹 **Security Filtering** - Detect ARP Spoofing, MITM attacks, and unauthorized devices.
+- 🔹 **Performance Filtering** - Identify abnormal network behavior based on packet frequency and anomalies.
 
-## 🔍 Use Cases  
-- **Enterprise Networks:** Monitor internal networks and detect unauthorized connections.  
-- **Home Security:** Ensure only trusted devices are connected to your personal network.  
-- **Educational Institutions:** Protect institutional networks from external intrusions.  
-- **Cybersecurity Research:** Analyze network behavior and security threats.  
+---
 
-## 🚀 Future Enhancements  
-- **User-Friendly GUI:** Develop a graphical interface for intuitive monitoring.  
-- **Database Integration:** Store device logs for long-term analysis.  
-- **AI-Driven Threat Detection:** Implement machine learning models to detect anomalies.  
-- **Customizable Alerts:** Allow users to define alert preferences and thresholds.  
+## 🛠 Installation & Setup
 
-## 📧 Contributions & Feedback  
-We welcome contributions! Feel free to fork this repository, submit pull requests, or open issues. Let’s work together to strengthen network security!  
+### 📌 Prerequisites
+Ensure that you have **Python 3.8 or later** installed.
 
-For inquiries or collaboration, contact us at **omchireddy2004@gmail.com**.  
+### 📥 Steps to Install
+1️⃣ Clone the repository:
+   ```sh
+   git clone https://github.com/yourusername/ARP-Defender.git
+   cd ARP-Defender
+   ```
+2️⃣ Install required dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+3️⃣ Launch ARP Defender:
+   ```sh
+   python ARP_Defender.py
+   ```
 
----  
-**Developed by:** Sai Om Chi Reddy  
-**License:** MIT  
+---
+
+## 📊 How to Use
+1. 🟢 **Start Monitoring:** Click the **Start Monitoring** button to initiate live ARP tracking.
+2. 🎯 **Apply Filters:** Monitor specific IPs, MAC addresses, or ARP traffic types.
+3. 📊 **View Real-time Graphs:** Analyze live network traffic visually.
+4. 📂 **Generate Reports:** Click **Generate Report** to export findings in **PDF format**.
+5. 🚨 **Detect Threats:** Receive security alerts for potential ARP attacks and anomalies.
+
+
+---
+
+## 📜 License
+🔓 This project is **open-source** and licensed under the **MIT License**.
+
+---
+
+## 🤝 Contributing
+🚀 We welcome contributions to improve **ARP Defender**! Feel free to **fork the repository**, submit pull requests, or report issues.
+
+### 🔧 How to Contribute:
+1. 📌 **Fork the repository**
+2. 🔀 **Create a feature branch**
+3. 💡 **Commit your changes**
+4. 🔍 **Submit a pull request**
+
+---
+
+## 📞 Contact & Support
+📩 Have questions or suggestions? Reach out via **GitHub Issues** or email: 📧 **networkmonitoring404@gmail.com**
+
+💡 **Join the mission to create a safer and more secure network environment!** 🔥
+
