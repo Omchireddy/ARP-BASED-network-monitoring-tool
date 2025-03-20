@@ -958,6 +958,10 @@ class NetworkMonitorApp(QMainWindow):
     def start_packet_capture(self):
         """Start the packet capture thread."""
         interface = self.interface_combo.currentText()
+        if interface not in self.get_network_interfaces():
+            QMessageBox.warning(self, "Error", f"Interface '{interface}' not found!")
+            return
+    
         filter_text = self.filter_input.text().strip()
         self.packet_capture_thread = PacketCaptureThread(interface, filter_text)
         self.packet_capture_thread.packet_captured.connect(self.update_packet_list)
@@ -1040,9 +1044,11 @@ class NetworkMonitorApp(QMainWindow):
                 for line in output.split("\n"):
                     if line and not line.startswith(" "):
                         interfaces.append(line.split(":")[0].strip())
+            print("Available Interfaces:", interfaces)  # Print available interfaces
         except Exception as e:
             print(f"Error fetching network interfaces: {e}")
         return interfaces
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
