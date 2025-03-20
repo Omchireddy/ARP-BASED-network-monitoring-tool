@@ -1,8 +1,8 @@
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-EMAIL_SENDER = "networkmonitor404@gamil.com"
+EMAIL_SENDER = "networkmonitor404@gmail.com"
 EMAIL_PASSWORD = "rwte cjcx knsl haih"
-EMAIL_RECEIVER = "networkmonitor404@gamil.com"
+EMAIL_RECEIVER = "networkmonitor404@gmail.com"
 
-NETWORK_INTERFACE = "Wi-Fi"  # Change based on OS (e.g., "wlan0" for Linux)
-SCAN_INTERVAL = 20  # Time in seconds for alerts
+NETWORK_INTERFACE = "Wi-Fi" 
+SCAN_INTERVAL = 20  
