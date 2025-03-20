@@ -1,7 +1,9 @@
-from wifi_scanner import scan_wifi
-from scanner import monitor_network
+import sys
+from PyQt5.QtWidgets import QApplication
+from gui import NetworkMonitorApp  # Assuming your GUI code is in gui.py
 
 if __name__ == "__main__":
-    scan_wifi()
-    input("\n🔗 Connect to your target network and press Enter to continue...")
-    monitor_network()
+    app = QApplication(sys.argv)
+    window = NetworkMonitorApp()
+    window.show()
+    sys.exit(app.exec_())
