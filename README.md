@@ -1,6 +1,5 @@
 # 🛡️ ARP Defender - Advanced Network Security Tool
 
-![ARP Defender Logo](GUI_Assets/logo.png)
 
 🚀 **ARP Defender** is a **cutting-edge real-time ARP monitoring and security tool** designed to **detect, analyze, and neutralize** potential ARP-based network threats. With a sleek **graphical user interface (GUI) built using Tkinter**, it provides seamless network visibility, **real-time security alerts**, and **detailed analytical reports** to protect your network from malicious activities.
 
