@@ -236,6 +236,7 @@ class PacketCaptureThread(QThread):
             self.packet_captured.emit(packet_info)
             
         try:
+            print(f"Starting sniffing on {self.interface} with filter: {self.filter_text}")  # Debugging line
             scapy.sniff(iface=self.interface, filter=self.filter_text, prn=packet_callback, store=0)
         except Exception as e:
             print(f"Error in packet capture: {e}")
@@ -435,6 +436,7 @@ class NetworkMonitorApp(QMainWindow):
     def apply_filter(self):
         """Apply the filter from the input field."""
         filter_text = self.filter_input.text().strip()
+        print(f"Applying filter: {filter_text}")  # Debugging line
         if self.packet_capture_thread:
             self.packet_capture_thread.update_filter(filter_text)
     def show_advanced_filter(self):
@@ -980,18 +982,62 @@ class NetworkMonitorApp(QMainWindow):
             self.start_capture_btn.setText("Start Packet Capture")
         
     def update_packet_list(self, packet_info):
-        """Update the packet list in the UI."""
+        """Update the packet list in the UI based on the applied filter."""
+        # Append the packet to the captured packets list
         self.captured_packets.append(packet_info)
+    
+        # Now update the table based on the current filter
+        self.apply_filter()  # Call the apply_filter method to refresh the table
+
+    def apply_filter(self):
+        """Apply the filter from the input field and update the table."""
+        filter_text = self.filter_input.text().strip()
+    
+        # Clear the current table
+        self.packet_table.setRowCount(0)
+    
+        # Populate the table with filtered packets
+        for packet_info in self.captured_packets:
+            if not filter_text or self.matches_filter(packet_info, filter_text):
+                self.add_packet_to_table(packet_info)
+
+    def add_packet_to_table(self, packet_info):
+        """Helper method to add a packet to the table."""
         row_position = self.packet_table.rowCount()
         self.packet_table.insertRow(row_position)
         self.packet_table.setItem(row_position, 0, QTableWidgetItem(packet_info["time"]))
         self.packet_table.setItem(row_position, 1, QTableWidgetItem(packet_info["src_ip"]))
-        self .packet_table.setItem(row_position, 2, QTableWidgetItem(packet_info["dst_ip"]))
+        self.packet_table.setItem(row_position, 2, QTableWidgetItem(packet_info["dst_ip"]))
         self.packet_table.setItem(row_position, 3, QTableWidgetItem(packet_info["protocol"]))
         self.packet_table.setItem(row_position, 4, QTableWidgetItem(str(packet_info["length"])))
         self.packet_table.setItem(row_position, 5, QTableWidgetItem(packet_info["src_mac"]))
         self.packet_table.setItem(row_position, 6, QTableWidgetItem(packet_info["dst_mac"]))
         self.packet_table.setItem(row_position, 7, QTableWidgetItem(packet_info["info"]))
+
+    def matches_filter(self, packet_info, filter_text): 
+        """Check if the packet matches the given filter."""
+        # Split the filter text into parts
+        filter_parts = filter_text.split()
+    
+        # Check for IP address filtering
+        for part in filter_parts:
+            if part.startswith("src host"):
+                src_ip = part.split(" ")[-1]
+                if packet_info["src_ip"] != src_ip:
+                    return False
+            elif part.startswith("dst host"):
+                dst_ip = part.split(" ")[-1]
+                if packet_info["dst_ip"] != dst_ip:
+                    return False
+            elif part.startswith("tcp") or part.startswith("udp") or part.startswith("icmp") or part.startswith("arp"):
+                if packet_info["protocol"].lower() != part:
+                    return False
+            elif part.startswith("port"):
+                port = part.split(" ")[-1]
+                if packet_info.get("src_port") != port and packet_info.get("dst_port") != port:
+                    return False
+
+        return True
         
     def test_email_settings(self):
         """Test the email settings by sending a test email."""
