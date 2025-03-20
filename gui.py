@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget, QWidget, QVB
                             QDialog, QDialogButtonBox, QMenu, QAction)
 from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QThread
 from PyQt5.QtGui import QFont, QColor, QIcon
+import psutil
 import scapy.all as scapy
 
 # Configuration
@@ -957,7 +958,10 @@ class NetworkMonitorApp(QMainWindow):
         
     def start_packet_capture(self):
         """Start the packet capture thread."""
-        interface = self.interface_combo.currentText()
+        interface = self.interface_combo.currentText()  # Get the selected interface name
+        print(f"Selected interface for packet capture: {interface}")
+    
+        # Check if the interface is valid
         if interface not in self.get_network_interfaces():
             QMessageBox.warning(self, "Error", f"Interface '{interface}' not found!")
             return
@@ -1031,23 +1035,17 @@ class NetworkMonitorApp(QMainWindow):
         QMessageBox.information(self, "Success", "All data cleared.")
 
     def get_network_interfaces(self):
-        """Get a list of available network interfaces."""
-        interfaces = []
-        try:
-            if platform.system() == "Windows":
-                output = subprocess.check_output("ipconfig", shell=True, text=True)
-                for line in output.split("\n"):
-                    if "adapter" in line.lower():
-                        interfaces.append(line.split(":")[0].strip())
-            elif platform.system() == "Linux":
-                output = subprocess.check_output("ifconfig", shell=True, text=True)
-                for line in output.split("\n"):
-                    if line and not line.startswith(" "):
-                        interfaces.append(line.split(":")[0].strip())
-            print("Available Interfaces:", interfaces)  # Print available interfaces
-        except Exception as e:
-            print(f"Error fetching network interfaces: {e}")
-        return interfaces
+        """Retrieve available network interfaces and their MAC addresses."""
+        interfaces = psutil.net_if_addrs()
+        mac_addresses = {}
+    
+        for interface, addresses in interfaces.items():
+            for address in addresses:
+                if address.family == psutil.AF_LINK:  # Check for MAC address
+                    mac_addresses[interface] = address.address
+    
+        # Return only the interface names without any prefixes
+        return list(mac_addresses.keys())
 
 
 if __name__ == "__main__":
